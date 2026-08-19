@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Safety Checker</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <header>
+
+            <div class="logo">
+
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+
+                    <path
+                        d="M14 2L4 7V14C4 19.5 8.4 24.7 14 26C19.6 24.7 24 19.5 24 14V7L14 2Z"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        fill="none"
+                    />
+
+                    <path
+                        d="M10 14L13 17L18 12"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                </svg>
+
+                <h1>URL Safety Checker</h1>
+
+            </div>
+
+            <p class="subtitle">
+                Real-time URL threat scanner
+            </p>
+
+        </header>
+
+        <!-- FORM -->
+        <form method="POST" class="scan-form">
+
+            <div class="input-row">
+
+                <input
+                    type="text"
+                    name="url"
+                    placeholder="https://example.com"
+                    value="{{ url }}"
+                    required
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+
+                <button type="submit">
+                    Scan URL
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- RESULTS -->
+        {% if result %}
+
+        <div class="results">
+
+            <!-- VERDICT CARD -->
+            <div class="verdict-card verdict-{{ verdict_class }}">
+
+                <div class="verdict-top">
+
+                    <div>
+                        <p class="section-label">Verdict</p>
+                        <p class="verdict-text">{{ verdict_label }}</p>
+                    </div>
+
+                    <div class="score-box">
+                        <p class="section-label">Risk Score</p>
+                        <p class="verdict-text">{{ score }} / 10</p>
+                    </div>
+
+                </div>
+
+                <!-- SCORE BAR -->
+                <div class="score-bar-bg">
+
+                    <div
+                        class="score-bar-fill"
+                        style="width: {{ score_pct ~ '%' }};"
+                    ></div>
+
+                </div>
+
+                <!-- URL -->
+                <p class="url-display">
+                    {{ url }}
+                </p>
+
+            </div>
+
+            <!-- HEURISTIC CHECKS -->
+            <div class="card">
+
+                <p class="section-label">
+                    Heuristic Checks
+                </p>
+
+                <ul class="checks-list">
+
+                    {% for f in findings %}
+
+                    <li class="check-row">
+
+                        <!-- ICON -->
+                        <span class="check-icon check-{{ f.status }}">
+
+                            {% if f.status == 'pass' %}
+                                ✓
+
+                            {% elif f.status == 'fail' %}
+                                ✕
+
+                            {% else %}
+                                △
+                            {% endif %}
+
+                        </span>
+
+                        <!-- LABEL -->
+                        <span class="check-label">
+                            {{ f.label }}
+                        </span>
+
+                        <!-- DETAIL -->
+                        <span class="check-detail">
+                            {{ f.detail }}
+                        </span>
+
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
