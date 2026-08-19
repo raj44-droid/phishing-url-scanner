@@ -1,4 +1,4 @@
-# Phishing URL Detector
+# Phishing URL scanner
 
 A Flask-based cybersecurity web application that analyzes URLs for common phishing indicators and generates an explainable risk score.
 
